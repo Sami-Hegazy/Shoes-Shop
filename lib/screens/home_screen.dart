@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/constants/constants.dart';
+import 'package:shoes_shop/provider/data.dart';
 import '../widgets/custom_icon_button.dart';
-import '../data/data.dart';
+import 'package:provider/provider.dart';
 import '../widgets/shoe_card.dart';
 import '../screens/details_screen.dart';
 
@@ -41,6 +42,8 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final productsData = Provider.of<ShoesDataList>(context);
+    final products = productsData.items;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -101,7 +104,26 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildShoesListView(),
+                // _buildShoesListView(),
+                ListView.builder(
+                  itemCount: products.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return ChangeNotifierProvider.value(
+                      value: products[index],
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            DetailsScreen.routeName,
+                            arguments: products[index].id,
+                          );
+                        },
+                        child: const ShoeCard(),
+                      ),
+                    );
+                  },
+                )
               ],
             ),
           ),
@@ -110,24 +132,27 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     );
   }
 
-  Widget _buildShoesListView() {
-    return ListView.builder(
-        itemCount: shoesData.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) {
-                  return DetailsScreen(shoeData: shoesData[index]);
-                }),
-              );
-            },
-            child: ShoeCard(
-              shoe: shoesData[index],
-            ),
-          );
-        });
-  }
+  // Widget _buildShoesListView() {
+  //   final productsData = Provider.of<ShoesDataList>(context);
+  //   final products = productsData.items;
+  //   return ListView.builder(
+  //     itemCount: products.length,
+  //     shrinkWrap: true,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     itemBuilder: (context, index) {
+  //       return ChangeNotifierProvider.value(
+  //         value: products[index],
+  //         child: GestureDetector(
+  //           onTap: () {
+  //             // Navigator.of(context).pushNamed(DetailsScreen.routeName);
+  //             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+  //               return const DetailsScreen();
+  //             }));
+  //           },
+  //           child: const ShoeCard(),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_shop/constants/constants.dart';
-import 'package:shoes_shop/data/data.dart';
+import 'package:shoes_shop/provider/data.dart';
 import 'package:shoes_shop/widgets/custom_icon_button.dart';
 import 'package:shoes_shop/widgets/custom_like_button.dart';
-import '../data/data.dart';
+import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatefulWidget {
-  final ShoeData shoeData;
-  const DetailsScreen({Key? key, required this.shoeData}) : super(key: key);
+  const DetailsScreen({Key? key}) : super(key: key);
+  static const routeName = '/detail-screen';
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -54,6 +54,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final itemtId =
+        ModalRoute.of(context)?.settings.arguments as String; //is the id
+    final loadedProduct =
+        Provider.of<ShoesDataList>(context, listen: false).findByID(itemtId);
+
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -69,11 +74,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     height: 300,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: widget.shoeData.backgroundColor,
+                      color: loadedProduct.backgroundColor,
                     ),
                     child: Hero(
-                      tag: widget.shoeData.id,
-                      child: Image.asset(widget.shoeData.image),
+                      tag: loadedProduct.id,
+                      child: Image.asset(loadedProduct.image),
                     ),
                   ),
                   IconButton(
@@ -93,11 +98,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                widget.shoeData.name,
+                loadedProduct.name,
                 style: Theme.of(context).textTheme.headline1,
               ),
               Text(
-                widget.shoeData.tagLine,
+                loadedProduct.tagLine,
                 style: Theme.of(context).textTheme.headline2,
               ),
               const SizedBox(height: 10),
@@ -130,7 +135,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                widget.shoeData.description,
+                loadedProduct.description,
                 style: Theme.of(context).textTheme.headline2,
               ),
               const SizedBox(height: 20),
@@ -152,7 +157,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                           child: const CircleAvatar(
                             backgroundImage:
-                                AssetImage('assets/images.people.jpg'),
+                                AssetImage('assets/images/people1.jpg'),
                           ),
                         ),
                         Positioned(
@@ -164,7 +169,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             ),
                             child: const CircleAvatar(
                               backgroundImage:
-                                  AssetImage('assets/images.people.jpg'),
+                                  AssetImage('assets/images/people2.jpg'),
                             ),
                           ),
                         ),
@@ -177,7 +182,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             ),
                             child: const CircleAvatar(
                               backgroundImage:
-                                  AssetImage('assets/images.people.jpg'),
+                                  AssetImage('assets/images/people3.jpg'),
                             ),
                           ),
                         ),
